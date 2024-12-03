@@ -1,7 +1,6 @@
 import os 
 from PIL import Image
 import timm
-import json 
 from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
 import torch 
@@ -85,8 +84,6 @@ class ImageClassifier:
 
 
 if __name__ == "__main__":
-    from huggingface_hub import login
-    login()
     resnet_name = 'resnet50'
     ef_name = 'efficientnet_b0'
 
