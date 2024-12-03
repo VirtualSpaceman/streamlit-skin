@@ -25,7 +25,7 @@ def load_classifier(model_card):
 
 models = {
     "ResNet50": "resnet50",
-    # "EfficientNetB0": "efficientnet_b0",
+    "DeiT": "deit_small_patch16_224"
 }
 
 ##########

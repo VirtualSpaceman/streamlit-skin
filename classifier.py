@@ -9,10 +9,12 @@ import torch.nn.functional as F
 
 
 layer_translate = {'resnet50': 'fc',
-                   'efficientnet_b0': 'classifier'}
+                   'efficientnet_b0': 'classifier',
+                   'deit_small_patch16_224': 'head'}
 
 dict_mapping = {'resnet50': "isic_resnet50",
-                'efficientnet_b0': "effnetb0_isic"}
+                'efficientnet_b0': "effnetb0_isic",
+                "deit_small_patch16_224": 'deit_isic'}
 
 class NeuralNetwork(nn.Module):
     def __init__(self, model_name):
@@ -70,7 +72,7 @@ class ImageClassifier:
             logits = self.model(inputs)
 
         probs = F.softmax(logits, dim=-1)[0] # remove batch 
-        # print(f"{probs.shape=}/ {probs=}")
+        print(f"{probs.shape=}/ {probs=}")
 
         scores = []
         for i, prob in enumerate(probs):
@@ -86,23 +88,23 @@ class ImageClassifier:
 if __name__ == "__main__":
     resnet_name = 'resnet50'
     ef_name = 'efficientnet_b0'
+    deit_name = 'deit_small_patch16_224'
 
-    curr_model = resnet_name
+    curr_model = deit_name
     model = ImageClassifier(curr_model)
-
-    dict_mapping = {resnet_name: "isic_resnet50",
-                    ef_name: "effnetb0_isic"}
 
     # ckpt = torch.load(os.path.join(os.getcwd(), 'ckpts', f"{dict_mapping[curr_model]}.ckpt"), map_location='cpu')
     # ckpt = torch.load(os.path.join(os.getcwd(), 'ckpts', f"{dict_mapping[curr_model]}.ckpt"), map_location='cpu')
     # msg = model.model.load_state_dict(torch.load('./isic_resnet50.ckpt'))
     
-    # torch.save(ckpt['state_dict'], './isic_resnet50.ckpt')
+    # print(ckpt.keys())
+    # torch.save(ckpt['state_dict'], f'./{dict_mapping[curr_model]}.ckpt')
     # print(model.transforms)
 
-    # sample_img_path = '/Users/levygurgel/workspace/Datasets/isic2019/ISIC_2019_Training_Input/ISIC_0064481.jpg'  # -> duvida
-    sample_img_path = '/Users/levygurgel/workspace/Datasets/isic2019/ISIC_2019_Training_Input/ISIC_0054728.jpg' # -> 0.98 melanoma
+    sample_img_path = '/Users/levygurgel/workspace/Datasets/isic2019/ISIC_2019_Training_Input/ISIC_0064481.jpg'  # -> duvida
+    # sample_img_path = '/Users/levygurgel/workspace/Datasets/isic2019/ISIC_2019_Training_Input/ISIC_0054728.jpg' # -> 0.98 melanoma
     # sample_img_path = '/Users/levygurgel/workspace/Datasets/isic2019/ISIC_2019_Training_Input/ISIC_0027896.jpg' # 
+    # sample_img_path = '/Users/levygurgel/workspace/Datasets/isic2019/ISIC_2019_Training_Input/ISIC_0026768.jpg' # -> label:0 ->predito 0 
     img = Image.open(sample_img_path).convert('RGB')
 
     predictions = model.predict(img)
