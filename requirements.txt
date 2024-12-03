@@ -1,0 +1,7 @@
+streamlit
+Pillow
+transformers
+torch
+torchvision
+plotly
+timm
